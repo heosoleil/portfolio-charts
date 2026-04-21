@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>네이버·컬리 매출 추이</title>
+<title>네이버 스마트스토어 매출 추이</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -15,7 +15,7 @@
   .chart-wrap {
     background: #ffffff;
     border-radius: 16px;
-    padding: 28px 20px 20px;
+    padding: 28px 20px 24px;
     box-shadow: 0 2px 16px rgba(0,0,0,0.07);
     max-width: 900px;
     margin: 0 auto;
@@ -30,18 +30,24 @@
   p.sub {
     font-size: 12px;
     color: #888;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
+  }
+  .badges {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
   }
   .badge {
     display: inline-block;
-    background: #EFF6FF;
-    color: #2563EB;
     font-size: 11px;
     font-weight: 600;
-    padding: 3px 8px;
+    padding: 3px 10px;
     border-radius: 20px;
-    margin-bottom: 16px;
   }
+  .badge.gray { background: #F3F4F6; color: #6B7280; }
+  .badge.blue { background: #EFF6FF; color: #2563EB; }
+  .badge.green { background: #F0FDF4; color: #16A34A; }
   .canvas-wrap {
     position: relative;
     width: 100%;
@@ -57,11 +63,15 @@
 </head>
 <body>
 <div class="chart-wrap">
-  <h2>네이버 · 컬리 월 매출 추이</h2>
-  <p class="sub">2025.01 — 2026.03 · 담당 전환 이후 성장 추이</p>
-  <span class="badge">📈 26.03 네이버 단월 1.52억 · YoY +211%</span>
+  <h2>네이버 스마트스토어 월 매출 추이</h2>
+  <p class="sub">2025.01 — 2026.04 · 담당자 전환 전후 비교</p>
+  <div class="badges">
+    <span class="badge gray">전 담당자 → 2026.01.09</span>
+    <span class="badge blue">허선영 담당 2026.01.10 →</span>
+    <span class="badge green">점선: 예상 마감</span>
+  </div>
   <div class="canvas-wrap">
-    <canvas id="chart2"></canvas>
+    <canvas id="chartNaver"></canvas>
   </div>
 </div>
 
@@ -69,47 +79,76 @@
 const labels = [
   "25-01","25-02","25-03","25-04","25-05","25-06",
   "25-07","25-08","25-09","25-10","25-11","25-12",
-  "26-01","26-02","26-03"
+  "26-01","26-02","26-03","26-04"
 ];
 
-const 네이버 = [52633860,53952530,56378320,59779940,58312790,70639060,73662050,77751250,72694360,74024330,86133920,90552170,96089200,94840290,152422870];
-const 컬리 = [18918200,11589900,21727970,24671000,29425600,35674500,47157600,40527300,50233900,63062180,46267720,50245850,35086550,40028900,52647800];
+// 전 담당자 구간 (25-01 ~ 26-01, 이후 null)
+const 전담당자 = [
+  52633860,53952530,56378320,59779940,58312790,70639060,
+  73662050,77751250,72694360,74024330,86133920,90552170,
+  96089200,null,null,null
+];
 
-new Chart(document.getElementById('chart2'), {
+// 허선영 담당 구간 (26-01 겹치게 시작, 26-04는 예상)
+const 허선영실적 = [
+  null,null,null,null,null,null,
+  null,null,null,null,null,null,
+  96089200,94840290,152422870,null
+];
+
+const 허선영예상 = [
+  null,null,null,null,null,null,
+  null,null,null,null,null,null,
+  null,null,152422870,150000000
+];
+
+new Chart(document.getElementById('chartNaver'), {
   type: 'line',
   data: {
     labels,
     datasets: [
       {
-        label: '네이버',
-        data: 네이버,
+        label: '전 담당자',
+        data: 전담당자,
+        borderColor: '#9CA3AF',
+        backgroundColor: 'rgba(156,163,175,0.07)',
+        borderWidth: 2,
+        pointRadius: 0,
+        pointHoverRadius: 0,
+        tension: 0.4,
+        fill: true,
+        spanGaps: false
+      },
+      {
+        label: '허선영 담당',
+        data: 허선영실적,
         borderColor: '#2563EB',
         backgroundColor: 'rgba(37,99,235,0.08)',
         borderWidth: 2.5,
-        pointRadius: 3,
+        pointRadius: 0,
         pointHoverRadius: 0,
-        pointBackgroundColor: '#2563EB',
         tension: 0.4,
-        fill: true
+        fill: true,
+        spanGaps: false
       },
       {
-        label: '컬리',
-        data: 컬리,
-        borderColor: '#7C3AED',
-        backgroundColor: 'rgba(124,58,237,0.06)',
-        borderWidth: 2.5,
-        pointRadius: 3,
+        label: '예상 마감 (26-04)',
+        data: 허선영예상,
+        borderColor: '#16A34A',
+        backgroundColor: 'rgba(22,163,74,0.05)',
+        borderWidth: 2,
+        borderDash: [6, 4],
+        pointRadius: 0,
         pointHoverRadius: 0,
-        pointBackgroundColor: '#7C3AED',
         tension: 0.4,
-        fill: false
+        fill: false,
+        spanGaps: false
       }
     ]
   },
   options: {
     responsive: true,
     maintainAspectRatio: false,
-    interaction: { mode: undefined, intersect: false },
     plugins: {
       legend: {
         position: 'bottom',
@@ -129,7 +168,8 @@ new Chart(document.getElementById('chart2'), {
         ticks: {
           font: { size: 10 },
           color: '#999',
-          maxRotation: 0
+          maxRotation: 0,
+          autoSkip: false
         }
       },
       y: {
