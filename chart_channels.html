@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>채널별 월 매출 추이</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #ffffff;
+    font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+    padding: 32px 24px;
+  }
+  .chart-wrap {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 28px 20px 20px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  h2 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 4px;
+    letter-spacing: -0.3px;
+  }
+  p.sub {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 20px;
+  }
+  .canvas-wrap {
+    position: relative;
+    width: 100%;
+    height: 320px;
+  }
+  @media (max-width: 600px) {
+    body { padding: 16px 12px; }
+    .chart-wrap { padding: 20px 12px 16px; }
+    .canvas-wrap { height: 240px; }
+    h2 { font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+<div class="chart-wrap">
+  <h2>채널별 월 매출 추이</h2>
+  <p class="sub">2023.01 — 2025.12 · 자사몰 / 컬리 / 카카오선물하기 / 29CM</p>
+  <div class="canvas-wrap">
+    <canvas id="chart1"></canvas>
+  </div>
+</div>
+
+<script>
+const labels = [
+  "23-01","23-02","23-03","23-04","23-05","23-06",
+  "23-07","23-08","23-09","23-10","23-11","23-12",
+  "24-01","24-02","24-03","24-04","24-05","24-06",
+  "24-07","24-08","24-09","24-10","24-11","24-12",
+  "25-01","25-02","25-03","25-04","25-05","25-06",
+  "25-07","25-08","25-09","25-10","25-11","25-12"
+];
+
+const 자사몰 = [28191235,35435520,43756855,34475340,47524045,66247870,68317298,75931895,78882960,96338935,120626808,87361605,88161085,86974390,105456590,97260506,103713855,107445395,117784605,109920610,104271160,99934977,144837609,91187929,76082943,71045387,70677793,79933471,100509328,105383692,144457715,155278825,172169088,154744872,203322662,149860604];
+const 컬리 = [6774033,3116361,19190315,33903646,21979674,15324820,7336730,14024342,18038982,17206689,12844503,19925220,520500,6403229,5634016,12269844,6880530,9948475,13385100,9818000,8679900,8466100,6818500,8501500,18918200,11589900,21727970,24671000,29425600,35674500,47157600,40527300,50233900,63062180,46267720,50245850];
+const 카카오 = [14316800,7575400,9726900,13785100,13910000,8666000,12948000,17161000,27213000,29888000,25498000,41737145,37732000,59427020,26335900,17925000,19369000,15847000,9076000,9878000,7454000,6939000,10191000,9535200,12192800,7450600,5729600,3215700,5701000,4094000,6064900,5779700,8685600,11651600,10130400,9278300];
+const cm29 = [0,3830200,2171900,2525300,1977300,4419950,5027600,3272600,3714500,3043700,2589719,2774748,4134362,4798229,4027454,3010876,2446659,2548426,2362243,1077550,1128242,1181585,1424623,606617,1119036,8652054,950956,2352329,4602760,1670460,1052080,2145100,7298960,7792060,2980800,6282280];
+
+new Chart(document.getElementById('chart1'), {
+  type: 'line',
+  data: {
+    labels,
+    datasets: [
+      {
+        label: '자사몰',
+        data: 자사몰,
+        borderColor: '#2563EB',
+        backgroundColor: 'rgba(37,99,235,0.08)',
+        borderWidth: 2,
+        pointRadius: 0,
+        pointHoverRadius: 5,
+        tension: 0.4,
+        fill: true
+      },
+      {
+        label: '컬리',
+        data: 컬리,
+        borderColor: '#7C3AED',
+        backgroundColor: 'rgba(124,58,237,0.06)',
+        borderWidth: 2,
+        pointRadius: 0,
+        pointHoverRadius: 5,
+        tension: 0.4,
+        fill: false
+      },
+      {
+        label: '카카오선물하기',
+        data: 카카오,
+        borderColor: '#F59E0B',
+        backgroundColor: 'rgba(245,158,11,0.06)',
+        borderWidth: 2,
+        pointRadius: 0,
+        pointHoverRadius: 5,
+        tension: 0.4,
+        fill: false
+      },
+      {
+        label: '29CM',
+        data: cm29,
+        borderColor: '#10B981',
+        backgroundColor: 'rgba(16,185,129,0.06)',
+        borderWidth: 2,
+        pointRadius: 0,
+        pointHoverRadius: 5,
+        tension: 0.4,
+        fill: false
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: {
+          font: { size: 11, family: "'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif" },
+          color: '#555',
+          usePointStyle: true,
+          pointStyleWidth: 10,
+          padding: 16
+        }
+      },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` ${ctx.dataset.label}: ${(ctx.raw/10000).toFixed(0)}만원`
+        },
+        backgroundColor: 'rgba(255,255,255,0.95)',
+        titleColor: '#111',
+        bodyColor: '#444',
+        borderColor: '#e5e7eb',
+        borderWidth: 1,
+        padding: 10
+      }
+    },
+    scales: {
+      x: {
+        grid: { color: 'rgba(0,0,0,0.04)' },
+        ticks: {
+          font: { size: 10 },
+          color: '#999',
+          maxRotation: 0,
+          autoSkip: true,
+          maxTicksLimit: 12
+        }
+      },
+      y: {
+        grid: { color: 'rgba(0,0,0,0.04)' },
+        ticks: {
+          font: { size: 10 },
+          color: '#999',
+          callback: v => (v/10000).toFixed(0) + '만'
+        }
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>

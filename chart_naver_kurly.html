@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>네이버·컬리 매출 추이</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #ffffff;
+    font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+    padding: 32px 24px;
+  }
+  .chart-wrap {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 28px 20px 20px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  h2 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 4px;
+    letter-spacing: -0.3px;
+  }
+  p.sub {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 20px;
+  }
+  .badge {
+    display: inline-block;
+    background: #EFF6FF;
+    color: #2563EB;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+  .canvas-wrap {
+    position: relative;
+    width: 100%;
+    height: 320px;
+  }
+  @media (max-width: 600px) {
+    body { padding: 16px 12px; }
+    .chart-wrap { padding: 20px 12px 16px; }
+    .canvas-wrap { height: 240px; }
+    h2 { font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+<div class="chart-wrap">
+  <h2>네이버 · 컬리 월 매출 추이</h2>
+  <p class="sub">2025.01 — 2026.03 · 담당 전환 이후 성장 추이</p>
+  <span class="badge">📈 26.03 네이버 단월 1.52억 · YoY +211%</span>
+  <div class="canvas-wrap">
+    <canvas id="chart2"></canvas>
+  </div>
+</div>
+
+<script>
+const labels = [
+  "25-01","25-02","25-03","25-04","25-05","25-06",
+  "25-07","25-08","25-09","25-10","25-11","25-12",
+  "26-01","26-02","26-03"
+];
+
+const 네이버 = [52633860,53952530,56378320,59779940,58312790,70639060,73662050,77751250,72694360,74024330,86133920,90552170,96089200,94840290,152422870];
+const 컬리 = [18918200,11589900,21727970,24671000,29425600,35674500,47157600,40527300,50233900,63062180,46267720,50245850,35086550,40028900,52647800];
+
+new Chart(document.getElementById('chart2'), {
+  type: 'line',
+  data: {
+    labels,
+    datasets: [
+      {
+        label: '네이버',
+        data: 네이버,
+        borderColor: '#2563EB',
+        backgroundColor: 'rgba(37,99,235,0.08)',
+        borderWidth: 2.5,
+        pointRadius: 3,
+        pointHoverRadius: 6,
+        pointBackgroundColor: '#2563EB',
+        tension: 0.4,
+        fill: true
+      },
+      {
+        label: '컬리',
+        data: 컬리,
+        borderColor: '#7C3AED',
+        backgroundColor: 'rgba(124,58,237,0.06)',
+        borderWidth: 2.5,
+        pointRadius: 3,
+        pointHoverRadius: 6,
+        pointBackgroundColor: '#7C3AED',
+        tension: 0.4,
+        fill: false
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: {
+          font: { size: 11, family: "'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif" },
+          color: '#555',
+          usePointStyle: true,
+          pointStyleWidth: 10,
+          padding: 16
+        }
+      },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` ${ctx.dataset.label}: ${(ctx.raw/10000).toFixed(0)}만원`
+        },
+        backgroundColor: 'rgba(255,255,255,0.95)',
+        titleColor: '#111',
+        bodyColor: '#444',
+        borderColor: '#e5e7eb',
+        borderWidth: 1,
+        padding: 10
+      }
+    },
+    scales: {
+      x: {
+        grid: { color: 'rgba(0,0,0,0.04)' },
+        ticks: {
+          font: { size: 10 },
+          color: '#999',
+          maxRotation: 0
+        }
+      },
+      y: {
+        grid: { color: 'rgba(0,0,0,0.04)' },
+        ticks: {
+          font: { size: 10 },
+          color: '#999',
+          callback: v => (v/10000).toFixed(0) + '만'
+        }
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>
